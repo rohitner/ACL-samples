@@ -1,0 +1,2157 @@
+#######################
+## output of pdf2txt ##
+#######################
+
+Looking hard: Eye tracking for detecting grammaticality of
+
+automatically compressed sentences
+
+H´ector Mart´ınez Alonso
+University of Copenhagen
+
+Copenhagen, Denmark
+alonso@hum.ku.dk
+
+Anders Søgaard
+
+University of Copenhagen
+
+Copenhagen, Denmark
+soegaard@hum.ku.dk
+
+Sigrid Klerke
+
+University of Copenhagen
+
+Copenhagen, Denmark
+
+skl@hum.ku.dk
+
+Abstract
+
+Natural language processing (NLP) tools
+are often developed with the intention of
+easing human processing, a goal which is
+hard to measure. Eye movements in read-
+ing are known to reﬂect aspects of the cog-
+nitive processing of text (Rayner et al.,
+2013). We explore how eye movements
+reﬂect aspects of reading that are of rel-
+evance to NLP system evaluation and de-
+velopment. This becomes increasingly rel-
+evant as eye tracking is becoming avail-
+able in consumer products.
+In this pa-
+per we present an analysis of the dif-
+ferences between reading automatic sen-
+tence compressions and manually simpli-
+ﬁed newswire using eye-tracking experi-
+ments and readers’ evaluations. We show
+that both manual simpliﬁcation and auto-
+matic sentence compression provide texts
+that are easier to process than standard
+newswire, and that the main source of dif-
+ﬁculty in processing machine-compressed
+text is ungrammaticality. Especially the
+proportion of regressions to previously
+read text is found to be sensitive to the dif-
+ferences in human- and computer-induced
+complexity. This ﬁnding is relevant for
+evaluation of automatic summarization,
+simpliﬁcation and translation systems de-
+signed with the intention of facilitating hu-
+man reading.
+
+1 Introduction
+
+Intuitively, the readability of a text should reﬂect
+the effort that a reader must put into recognizing
+the meaning encoded in the text. As a concept,
+readability thus integrates both content and form.
+Sentence-level readability assessment is desir-
+able from a computational point of view because
+
+smaller operational units allow systems to take
+rich information into account with each deci-
+sion. This computer-centric approach is in con-
+trast to traditional human-centric readability met-
+rics which are explicitly constructed for use at text
+level (cf. Bjornsson (1983) and Flesch (1948))
+and are by their own deﬁnitions unsuitable for au-
+tomatic application (cf. Benjamin (2012) for an
+evaluation of readability-formula usability).
+
+The standard approach to assessing text read-
+ability in natural language processing (NLP) is
+to ask readers to judge the quality of the output
+in terms of comprehensibility, grammaticality and
+meaning preservation (cf. Siddharthan and Katsos
+(2012)). An alternative is to use existing text col-
+lections categorized by readability level for learn-
+ing models of distinct categories of readability
+e.g. age or grade levels (Schwarm and Ostendorf,
+2005; Vajjala and Meurers, 2014).
+
+In this paper we seek to establish whether read-
+ers share an intuitive conceptualization of the read-
+ability of single sentences, and to what extent this
+conceptualization is reﬂected in their reading be-
+havior. We research this by comparing subjective
+sentence-level readability judgments to recordings
+of readers’ eye movements and by testing to what
+extent these measures co-vary across sentences of
+varying length and complexity. These analyses
+enable us to evaluate whether sentence-level sim-
+pliﬁcation operations can be meaningfully and di-
+rectly assessed using eye tracking, which would be
+of relevance to both manual and automated simpli-
+ﬁcation efforts.
+
+1.1 Automatic Simpliﬁcation by Compression
+Amancio et al. (2014) found that more than one
+fourth of the transformations observed in sen-
+tence pairs from Wikipedia and Single English
+Wikipedia were compressions. To obtain auto-
+matically simpliﬁed sentences we therefore train
+a sentence-compression model.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)97With inspiration from McDonald (2006), we
+train a sentence compression system on a corpus
+of parallel sentences of manually expert-simpliﬁed
+and original newswire text where all simpliﬁca-
+tions are compressions. The system is described
+in detail in section 2.
+
+Sentence compression works by simply drop-
+ping parts of a sentence and outputting the shorter
+sentence with less information content and simpler
+syntax. This approach allows us to control a num-
+ber of variables, and in particular, it guarantees
+that each expert simpliﬁcation and each system
+output are true subsets of the original input, pro-
+viding three highly comparable versions of each
+sentence. Further the system serves as a proof
+of concept that a relatively small amount of task-
+speciﬁc data can be sufﬁcient for this task.
+
+Sentence compression is, in addition, an impor-
+tant step in several downstream NLP tasks, includ-
+ing summarization (Knight and Marcu, 2000) and
+machine translation (Stymne et al., 2013).
+
+Below, we present the automatic simpliﬁcation
+setup,
+including the parallel data, features and
+model selection and details on how we select the
+data for the eye-tracking experiment. The follow-
+ing section details the eye movement recording
+and subjective evaluation setup. Section 4 presents
+our results followed by a discussion and our con-
+clusions.
+
+2 Automatic Simpliﬁcation Setup
+
+2.1 Training and Evaluation Corpus
+For the sentence compression training and evalu-
+ation data we extracted a subset of ordinary and
+simpliﬁed newswire texts from the Danish DSim
+corpus (Klerke and Søgaard, 2012). In Figure 1
+we give a schematic overview of how the data for
+our experiments was obtained.
+
+For model development and selection we ex-
+tracted all pairs of original and simpliﬁed sen-
+tences under the following criteria:
+
+1. No sentence pair differs by more than 150
+
+characters excluding punctuation.
+
+2. The simpliﬁed sentence must be a strict sub-
+set of the original and contain a minimum of
+four tokens.
+
+3. The original sentence must have at least one
+additional token compared to the simpliﬁed
+
+sentence and this difference must be non-
+punctuation and of minimum three charac-
+ters’ length.
+
+This results in a corpus of 2,332 sentence pairs,
+close to 4% of the DSim corpus. Descriptive
+statistics of this corpus are shown in Table 1.
+
+We followed the train-dev-test split of the DSim
+corpus forming a training set of 1,973 sentence
+pairs, a development set of 239 pairs, and a test
+set of 118 pairs.1
+
+For our experiment with eye tracking and sub-
+jective evaluation we created a similar dataset,
+denoted “augmented compressions” in Figure 1,
+from sentence pairs displaying similar compres-
+sions and in addition exactly one lexical substitu-
+tion. We augmented these pairs by simply chang-
+ing the synonym back to the original word choice,
+resulting in a valid compression. We obtained
+an automatically compressed version of these sen-
+tences from the trained model2. This results in a
+corpus of sentence triples consisting of an origi-
+nal, an expert simpliﬁcation and a system gener-
+ated version. In some cases the system output was
+identical to either the original input or to the ex-
+pert simpliﬁcation. We therefore selected the eval-
+uation data to include only sentence triples where
+all three versions were in fact different from one
+another resulting in 140 sentence triples, i.e. 420
+individual stimuli. On average the system deleted
+15 tokens per sentence while the experts average
+around 12 token deletions per sentence.
+
+2.2 Compression Model and Features
+The compression model is a conditional random
+ﬁeld (CRF) model trained to make a sequence of
+categorical decisions, in each determining whether
+the current word should be left out of the compres-
+sion output while taking into account the previous
+decision. We used CRF++ (Lafferty et al., 2001)
+trained with default parameter settings.
+
+Below, we describe the features we imple-
+mented. The features focus on surface form, PoS-
+tags, dependencies and word frequency informa-
+tion. Our initial choice of features is based on the
+comparisons in Feng et al. (2010) and Falkenjack
+and J¨onsson (2014), who both ﬁnd that parsing
+
+1The corpus was PoS-tagged and parsed using the Bohnet
+parser (Bohnet, 2010) trained on the Danish Dependency
+Treebank (Kromann, 2003) with Universal PoS-tags (Petrov
+et al., 2011).
+
+2Note that this dataset did not contribute to training, tun-
+
+ing or choosing the model.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)98Figure 1: We extract observed compressions from the simpliﬁcation corpus and train an automatic com-
+pression model. For the eye tracking and subjective evaluation we run the model on data that was not
+used for training. We only keep automatic compressions that are different from both the input and the
+expert compression. Augmented compressions are similar to compressions, but in addition they dis-
+play one lexical substitution. We augment these by substituting the original synonym back in the expert
+simpliﬁcation, thereby making it a compression.
+
+Original newswire
+
+Characters
+288,226
+123.6
+43.2
+24 – 291
+
+Tokens
+46,088
+19.8
+7.1
+5 – 45
+
+Expert compressions
+Characters
+Tokens
+21,303
+133,715
+9.1
+57.3
+24.5
+4.0
+4 – 33
+15 – 178
+
+Difference
+% deleted tokens
+53.8%
+51.0%
+18.2%
+4.4% – 86.2%
+
+Total
+Mean
+Std
+Range
+
+Table 1: Statistics on the full specialized corpus, 2.332 sentence pairs in total. Except for the row “Total”,
+statistics are per sentence. “Difference Tokens” report the average, standard deviation and range of the
+proportional change in number of tokens per sentence.
+
+features are useful while the gain from adding fea-
+tures beyond shallow features and dependencies is
+limited. In the CRF++ feature template we speci-
+ﬁed each feature to include a window of up to +/- 2
+tokens. In addition we included all pairwise com-
+binations of features and the bigram feature option
+which adds the model’s previous decision as a fea-
+ture for the current token.
+
+Shallow FORM, POS, CASE: This group con-
+sists of the lowercase word form, universal PoS-
+tag and the original case of the word.
+
+Length W LENGTH, S LENGTH: This group
+registers the word length (characters) and sentence
+length (tokens).
+
+Position PLACE, NEG PLACE, REL TENTH,
+THIRDS: This group records the token indices
+from both the beginning and end of the sentence,
+as well as each token’s relative position measured
+in tenths and in thirds of the sentence length.
+
+Morphology BIGRAM,
+
+FOUR-
+GRAM: The group records the ﬁnal two, three and
+four characters of each token for all tokens of at
+
+TRIGRAM,
+
+least four, ﬁve and six characters’ length, respec-
+tively.
+
+Dependencies DEP HEAD, DEP LABEL: These
+two features capture the index of the head of the
+token and the dependency label of this dependency
+relation.
+
+OOV,
+
+FREQ 3,
+
+Vocabulary
+
+FREQ 5,
+FREQ 10PS, FREQ 10EXP: This feature group
+records a range of frequency-counts3. The ﬁrst
+feature records out-of-vocabulary words,
+the
+remaining features assign the token to one of 3,
+5 or 10 bins according to it’s frequency.4 In the
+10-bin cases “Pseudo tenths” (PS) assigns the
+token to one of 10 bins each representing an equal
+number of word forms5, while “Exponential”
+
+3We used the Danish reference corpus KorpusDK (As-
+mussen, 2001) concatenated with the training part of the
+DSim corpus
+
+43 bins: in 1K most frequent tokens (mft), 5K mft or out-
+side 5K mft. 5 bins: in 100 mft, 500 mft, 1K mft, 5K mft or
+outside 5K mft.
+
+5Three large bins were assigned word forms occurring 1,
+2 and 3 times respectively while the remaining word forms
+were sorted in seven bins of equal number of word forms
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)99splits the vocabulary into 10 bins containing a
+decreasing number of word forms as the contained
+word form frequencies rise exponentially.
+
+2.3 Feature Selection
+We tested ﬁve types of feature selection on the de-
+velopment set of the corpus, namely single best
+feature, single best feature group, add-one, and
+feature-wise and group-wise feature ablation. On
+the development set the single best feature was
+POS alone, the single best feature group was the
+Shallow group alone, while the add-one-approach
+returned the combination of the three features
+FORM, PLACE and FREQ 10PS, and single fea-
+ture ablation returned all individual features mi-
+nus FREQ 10EXP, OOV, REL TENTHS, and group-
+wise ablation favored all groups minus the Vo-
+cabulary and Shallow groups. Of these, the last
+model, chosen with group-wise feature ablation,
+obtained the best F1-score on the test set. We
+use this model, which include the feature groups
+Length, Position, Morphology and Dependencies,
+to generate system output for the subsequent ex-
+periments.
+
+3 Human Evaluation
+
+The experiment described in the following section
+consisted of an eye tracking part and a subjective
+evaluation part. The eye tracking part of the ex-
+periment was carried out ﬁrst and was followed by
+the subjective evaluation part, which was carried
+out by email invitation to an online survey.
+
+We recruited 24 students aged 20 to 36 with
+Danish as ﬁrst language, 6 male and 18 female.
+All had normal or corrected-to-normal vision.
+None of the participants had been diagnosed with
+dyslexia. A total of 20 participants completed the
+evaluation task. The experiment was a balanced
+and randomized Latin-square design. This design
+ensured that each participant saw only one ver-
+sion from each sentence-triple from one half of the
+dataset while being eye-tracked. Afterwards par-
+ticipants were asked to assign relative ranks be-
+tween all three versions in each sentence-triple in
+the half of the dataset which they had not previ-
+ously seen. In total, each version of each sentence
+was read by four participants in the eye-tracking
+experiment and ranked by 9-11 other participants.
+In the subjective evaluation task participants
+had to produce a strict ordering by readability of
+all three versions of each sentence, with the rank
+
+‘1’ designating the most readable sentence. Pre-
+sentation order was fully randomized.
+
+3.1 Eye Tracking Design
+The stimuli were presented on a screen with
+1080 x 1920 resolution, and eye movements were
+recorded with a Tobii X120 binocular eye tracker
+at 60hz. We used the IV-T ﬁxation ﬁlter with stan-
+dard parameter settings (Olsen, 2012). The eye
+tracker was calibrated to each participant.
+
+Each stimulus was presented on one screen with
+left, top and right margins of 300 px and 1-6 lines
+per slide6. The font vas Verdana, size 60px and
+line spacing was 0.8em7.
+
+Participants were given written instructions and
+three demo trials before they were left alone to
+complete the experiment. All participants com-
+pleted 72 trials in three blocks, with the option
+to take a short break between blocks. Each trial
+consisted of a ﬁxation screen visible for 1.5 sec-
+onds, followed by stimulus onset. The participants
+were instructed to try to notice if each sentence
+was comprehensible and to press a key to proceed
+to the following trial as soon as they had ﬁnished
+reading.
+
+This setup only encourages but does not require
+participants to read for comprehension. Through
+data inspection and informal questions after the
+experiment, we ascertained that all participants
+were in fact reading and trying to decide which
+sentences were comprehensible.
+
+3.2 Eye-movement Measures
+Eye movements in reading can be divided into
+ﬁxations and saccades. Saccades are rapid eye
+movements between ﬁxations, and ﬁxations are
+brief periods of relatively stationary eye positions
+where information can be obtained from an area
+covering the central 1-2 degrees of the visual ﬁeld.
+Because reading is largely sequential, we can ob-
+serve regressions, which denote episodes of re-
+reading, that is, ﬁxations directed at text which is
+located earlier in the text than the furthest ﬁxated
+word (Holmqvist et al., 2011).
+
+In our analyses we include the measures of eye
+movements described below. All measures are cal-
+culated per single sentence reading and averaged
+
+6After recording, sentences with seven lines were dis-
+carded due to data quality loss at the lower edge of the screen
+7Following Blache (2012) who show that the viewing pat-
+terns with large text sizes are comparable to smaller text sizes
+and can be detected with this type of eye tracker.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)100over all four individual readings of each version
+of each sentence.
+
+Fixation count (Fix), the average total number
+of ﬁxations per sentence. This measure is expected
+to vary with sentence length, with more text re-
+quiring more ﬁxations.
+
+Total duration (ms), the average time spent
+reading the entire sentence. This measure is ex-
+pected to increase with sentence length and with
+sentence complexity.
+
+Fixations per word (Fix/w), the average num-
+ber of ﬁxations per word. This measure is sensitive
+to the number of saccades relative to the sentence
+length and is expected to reﬂect the reader’s con-
+fusion as more ﬁxations are needed to collect ad-
+ditional information. It should also be expected to
+be sensitive to high amounts of long words.
+
+Reading time per word (ms/w), the average
+time spent per word. This measure increases with
+slower paced reading, regardless of the number of
+ﬁxations. Reading time is considered a measure
+of processing cost and is inﬂuenced by both lexi-
+cal and syntactic complexity.
+
+Proportion regressions (%-regr), the propor-
+tion of ﬁxations spent on parts of the text that were
+already passed once. This measure is typically 10-
+15% in full paragraphs, and is expected to increase
+with sentence complexity. (Rayner et al., 2006)
+
+We include the sentence length as number of
+words (n-words) in our analyses for comparison
+because sentence length can inﬂuence the reading
+strategy (Holmqvist et al., 2011).
+
+Longer sentences will typically have a more
+complex syntax than short sentences due to the
+number of entities that need to be integrated into
+both the syntactic and mental representation of the
+sentence. However, unfamiliar or even erroneous
+words and syntax can add processing difﬁculties
+as well, leaving the reader to guess parts of the in-
+tended message. We consider all these cases under
+the term complexity as they are all likely to appear
+in automatically processed text. This is a natural
+consequence of the fact that statistical language
+processing tools are typically not able to distin-
+guish between extremely rare, but admissible text
+use and text that would be judged as invalid by a
+reader.
+
+4 Results
+
+We ﬁrst analyze the correlation of the subjective
+evaluations followed by analyses that compare eye
+
+movement measures, subjective rankings and sen-
+tence version.
+
+4.1 Ranking
+First we test whether the subjective rankings are
+similar between subjects. We estimate agreement
+with Kendall’s τB association statistic, which is
+a pairwise correlation coefﬁcient appropriate for
+comparing rank orderings. The range of τB is
+[−1,1] where -1 indicates perfect disagreement,
+i.e. one ranking is the precise opposite order of
+the other, 1 indicates perfect agreement and 0 in-
+dicates no association, that is, the order of two el-
+ements in one ranking is equally likely to be the
+same and the opposite in the other ranking. The
+odds-ratio of a pair of elements being ranked con-
+cordantly is (1 +τB)/(1−τB). The metric τB com-
+pares pairs of rankings, and we therefore calculate
+the average over all pairs of participants’ agree-
+ment on each ranking task. We use the one-tailed
+one-sample student’s t-test to test whether the av-
+erage agreement between all 91 unique pairs of an-
+notators is signiﬁcantly different from 0.
+If the
+rankings are awarded based on a shared under-
+standing and perception of readability, we expect
+the average agreement to be positive.
+
+We ﬁnd that
+
+the average τB is 0.311(p <
+0.0001). This corresponds to a concordance odds-
+ratio of 1.90 which means that it is almost twice as
+likely that two annotators will agree than disagree
+on how to rank two versions of a sentence. Al-
+though this result is strongly signiﬁcant, we note
+that it is a surprisingly low agreement given that
+the chance agreement is high for two people rank-
+ing three items.
+
+The relatively low systematic agreement could
+arise either from annotators ranking only a few
+traits systematically (e.g. syntax errors rank low
+when present and otherwise ranking is random)
+or it could result from annotators following fully
+systematic but only slightly overlapping strate-
+gies for ranking (e.g. one ranks by number of
+long words while another ranks by sentence length
+which would tend to overlap).
+
+4.2 Eye Tracking
+Our second analysis tests how well the subjec-
+tive ranking of sentences correspond to eye move-
+ments. We expect that more complex text will
+slow down readers, and we want to know whether
+the perceived readability reﬂects the variation we
+observe in eye-movement measures. Again using
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)101System – Expert
+
+0.25
+-7.5 ms
+-0.8 ﬁx
+3.0 ms
+0.1 ﬁx
+4 pp
+-1 word
+
+*
+–
+–
+–
+–
+**
+*
+
+avg. rank
+ms
+Fix
+ms/w
+ﬁx/w
+%-regr
+n-words
+
+System – Original Original – Expert
+***
+***
+***
+**
+**
+***
+–
+
+-0.47
+-190.0 ms
+-14.0 ﬁx
+-3.0 ms
+0.4 ﬁx
+1 pp
+-2 words
+
+Difference in medians
+
+***
+***
+***
+–
+***
+–
+*
+
+-0.73
+182.5 ms
+13.3 ﬁx
+6 ms
+-0.27 ﬁx
+5 pp
+1 word
+
+Expert – Broken Broken – Original
+
+-1.51
+-2 ms
+-1.3 ﬁx
+-13 ms
+-0.19 ﬁx
+11 pp
+0 words
+
+***
+–
+–
+**
+–
+***
+–
+
+0.78
+-168 ms
+-11 ﬁx
+-3 ms
+0.36 ﬁx
+2 pp
+-5 words
+
+***
+***
+***
+–
+**
+–
+–
+
+Table 2: Inﬂuence of sentence variant and brokenness on perceived readability and eye movements.
+When comparing Expert, Original and System 109 sentences are included while for Broken only 27
+sentences are compared. Stars denote signiﬁcance levels: *: p < .05, **: p < .01, ***: p < .001
+
+perceived readability and the sentence length, the
+time it takes to read it or the speed or number of
+ﬁxations or proportion of regressions recorded.
+
+One potential reason why we do not observe
+the expected association between rank and eye
+movements can be that several of our eye track-
+ing measures are expected to vary differently with
+sentence length and complexity, whereas readers’
+readability rankings are not necessarily varying
+consistently with any of these dimensions as par-
+ticipants are forced to conﬂate their experience
+into a one-dimensional evaluation.
+
+In order to investigate whether the eye move-
+ments do in fact distinguish between length and
+complexity in sentences, we compare how readers
+read and rank long original sentences, short expert
+simpliﬁcations and short, syntactically broken sys-
+tem output.
+
+The system output was post hoc categorized by
+syntactic acceptability by the main author and a
+colleague, resulting in a sample of 27 sentence
+triples with syntactically unacceptable system and
+a sample of 109 fully syntactically acceptable sen-
+tence triples. This allows us to compare the fol-
+lowing four groups, Original, Expert, Unbroken
+System and Broken System.
+
+We compare all eye-movement measures and
+ranking for each pair of groups9 and test whether
+the measures differ signiﬁcantly between groups
+using the Wilcoxon signed-rank test. We report the
+comparisons as the difference between the medi-
+ans in Table 2. This is similar to an unnormalized
+Cohen’s d effect size, but using the median as esti-
+mate of the central tendency rather than the mean.
+We observe that all group-wise comparisons re-
+ceive signiﬁcantly different average ranks, ranging
+from the Unbroken System scoring a quarter of a
+
+9We use the larger sample whenever the group Broken
+
+System is not part of the comparison.
+
+Figure 2: Interaction of sentence type and broken-
+ness on perceived readability and eye movements.
+(N=27)
+
+the τB association, we now assign ranks within
+each sentence-triple based on each eye-tracking
+measure and compare these pseudo-rankings to
+the typical rank assigned by the annotators.8 We
+ﬁnd that neither sentence length or any of the
+eye tracking measures are signiﬁcantly associated
+with the typical rank. This means that we do
+not observe any correlation between sentences’
+
+8This approach introduces ties which are handled by the
+τB statistic but inﬂuences the result notably since each rank-
+ing task only includes 3 items.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)102rank-position better than the Expert compressions
+to the Broken System output fairing 1.51 rank po-
+sitions worse than the Expert group.
+
+Note that Broken System is also ranked signiﬁ-
+cantly below the Original newswire sentences, sig-
+naling that bad syntax has a stronger impact on
+perceived readability than length. Even though
+the sample of Broken System sentences is small,
+overall reading time and number of ﬁxations dis-
+tinguish the long Original sentences from both
+the short Expert simpliﬁcations and Broken Sys-
+tem outputs, that are comparably short. We also
+observe that the number of ﬁxations per word is
+consistently lower for the long Original sentences
+compared to the other, shorter groups.
+Impor-
+tantly, we observe that two measures signiﬁcantly
+distinguish Expert simpliﬁcations from syntacti-
+cally Broken System output, namely reading time
+per word, which is slower for Broken System syn-
+tax and proportion of regressions which is much
+higher in Broken System sentences.
+In addition
+and as the only eye-tracking measure, proportion
+of regressions also distinguishes between Unbro-
+ken System output and Expert simpliﬁcations, in-
+dicating a 4 percentage point increase in propor-
+tion of regressions when reading Unbroken Sys-
+tem output.
+
+In Figure 2 we show how the medians of all
+the measures vary in the small subset that con-
+tain Broken System output, Expert compressions
+and Original newswire. The ﬁgure illustrates
+how the different aspects of reading behavior re-
+ﬂect length and syntax differently, with regres-
+sions most closely following the subjective rank-
+ing (top).
+
+5 Discussion
+
+In the following section we discuss weaknesses
+and implications of our results.
+
+5.1 Learning and Scoring the Compression
+
+Model
+
+It is important to note that the compression model
+inherently relies on the expert compressed data,
+which means it penalizes any deviation from the
+single gold compression. This behavior is sub-
+optimal given that various good simpliﬁcations
+usually can be produced by deletion and that al-
+ternative good compressions are not necessarily
+overlapping with the gold compression. One ex-
+ample would be to pick either part of a split sen-
+
+tence which can be equally good but will have zero
+overlap and count as an error. Our results suggest
+that the framework is still viable to learn a useful
+model, which would need a post-processing syn-
+tax check to overcome the syntax errors arising in
+the deletion process.
+
+We note that the model produces more aggres-
+sive deletions than the experts, sometimes produc-
+ing sentences that sound more like headlines than
+the body of a text. It is surprising that this is the
+case, as it is typically considered easier to improve
+the readability slightly, but we speculate that the
+behavior could reﬂect that the parts of the training
+data with headline-like characteristics may pro-
+vide a strong, learnable pattern. However, from an
+application perspective, it would be simple to ex-
+ploit this in a stacked model setup, where models
+trained to exhibit different characteristics present
+a range of alternative simpliﬁcations to a higher-
+level model.
+
+From inspections of the output we observe that
+the ﬁrst clause tends to be kept. This may be
+domain-dependent or it may reﬂect that PoS-tags
+and parsing features are more reliable in the be-
+ginning of the sentence. This could be tested in
+the future by applying the model to text from a
+domain with different information structure.
+
+Implications for System Development
+
+5.2
+We found that the very simple compression model
+presented in this paper was performing extensive
+simpliﬁcations, which is important in light of the
+fact that humans consider it harder to produce
+more aggressive simpliﬁcations. We trained our
+model on a relatively small, specialized compres-
+sion corpus. The Simple English Wikipedia sim-
+pliﬁcation corpus (SEW) (Coster and Kauchak,
+2011), which has been used in a range of statistical
+text simpliﬁcation systems (Coster and Kauchak,
+2011; Zhu et al., 2010; Woodsend and Lapata,
+2011), is far bigger, but also noisier. We found
+fewer than 50 sentence pairs ﬁtting our compres-
+sion criteria when exploring the possibility of gen-
+erating a similar training set for English from the
+SEW. However, in future work, other, smaller sim-
+pliﬁcation corpora could be adapted to the task,
+providing insight into the robustness of using com-
+pression for simpliﬁcation.
+
+Implications for Evaluation Methodology
+5.3
+In many natural language generation and manipu-
+lation setups, it is important that the system is able
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)103to recognize acceptable output, and it is typical
+of this type of setup that neither system-intrinsic
+scoring functions or as standard automatic evalu-
+ation procedures are reliably meeting this require-
+ment.
+In such cases it is common to obtain ex-
+pensive specialized human evaluations of the out-
+put. Our results are encouraging as they suggest
+that behavioral metrics like regressions and read-
+ing time that can be obtained from nave subjects
+simply reading system output may provide an af-
+fordable alternative.
+
+5.4 Brokenness in NLP output
+The experiments we have presented are targeting
+a problem speciﬁc to the ﬁeld of computer manip-
+ulation of texts. In contrast to human-written text,
+language generation systems typically cannot fully
+guarantee that the text will be ﬂuent and coherent
+in both syntax and semantics. Earlier research in
+readability has focused on how less-skilled read-
+ers, like children, dyslectic readers and second-
+language readers, interact with natural text, often
+in paragraphs or longer passages. It is important to
+determine to what extent the existing knowledge
+in these ﬁelds can be transferred to computational
+linguistics.
+
+6 Conclusion
+
+We have compared subjective evaluations and eye-
+movement data and shown that human simpliﬁ-
+cations and automatic sentence compressions of
+newswire produce variations in eye movements.
+
+We found that the main source of difﬁculty in
+processing machine-compressed text is ungram-
+maticality. Our results further show that both the
+human simpliﬁcations and the grammatical auto-
+matic sentence compressions in our data are easier
+to process than the original newswire text.
+
+Regressions and reading speed were found to be
+good candidates for robust, transferrable measures
+that, with increasing access to eye-tracking tech-
+nology, are strong candidates for being directly in-
+corporated into language technologies.
+
+We have shown that these measures can capture
+signiﬁcant differences in skilled readers’ reading
+of single sentences across subjects and with eco-
+logically valid stimuli. In future research we wish
+to explore the possibility of predicting relevant
+reading behavior for providing feedback to NLP
+systems like automatic text simpliﬁcation and sen-
+tence compression.
+
+References
+Marcelo Adriano Amancio, UK Shefﬁeld, and Lucia
+Specia. 2014. An analysis of crowdsourced text
+simpliﬁcations. In Proceedings of the 3rd Workshop
+on Predicting and Improving Text Readability for
+Target Reader Populations (PITR)@ EACL, pages
+123–130.
+
+Jørg Asmussen. 2001. Korpus 2000. Korpuslingvistik
+
+(NyS30).
+
+Rebekah George Benjamin.
+
+2012. Reconstructing
+readability: Recent developments and recommenda-
+tions in the analysis of text difﬁculty. Educational
+Psychology Review, 24(1):63–88.
+
+Carl-Hugo Bjornsson. 1983. Readability of Newspa-
+pers in 11 Languages. Reading Research Quarterly,
+18(4):480–497.
+
+Philippe Blache, Stephane Rauzy. 2012. Robustness
+and processing difﬁculty models. a pilot study for
+eye-tracking data on the french treebank. In 24th In-
+ternational Conference on Computational Linguis-
+tics, page 21.
+
+Bernd Bohnet. 2010. Very high accuracy and fast de-
+pendency parsing is not a contradiction. In Proceed-
+ings of the 23rd International Conference on Com-
+putational Linguistics, pages 89–97. Association for
+Computational Linguistics.
+
+William Coster and David Kauchak. 2011. Simple En-
+glish Wikipedia: a new text simpliﬁcation task. In
+Proceedings of the 49th Annual Meeting of the Asso-
+ciation for Computational Linguistics: Human Lan-
+guage Technologies: short papers-Volume 2, vol-
+ume 2, pages 665–669. Association for Computa-
+tional Linguistics.
+
+Johan Falkenjack and Arne J¨onsson. 2014. Classify-
+ing easy-to-read texts without parsing. In Proceed-
+ings of the 3rd Workshop on Predicting and Improv-
+ing Text Readability for Target Reader Populations
+(PITR)@ EACL, pages 114–122.
+
+Lijun Feng, Martin Jansche, Matt Huenerfauth, and
+No´emie Elhadad. 2010. A comparison of features
+In Proceed-
+for automatic readability assessment.
+ings of the 23rd International Conference on Com-
+putational Linguistics: Posters, pages 276–284. As-
+sociation for Computational Linguistics.
+
+Rudolph Flesch. 1948. A new readability yardstick.
+
+Journal of applied psychology, 32(3):221.
+
+Kenneth Holmqvist, Marcus Nystr¨om, Richard An-
+dersson, Richard Dewhurst, Halszka Jarodzka, and
+Joost Van de Weijer. 2011. Eye tracking: A com-
+prehensive guide to methods and measures.
+
+Sigrid Klerke and Anders Søgaard. 2012. DSim , a
+Danish Parallel Corpus for Text Simpliﬁcation. In
+Proceedings of Language Resources and Evaluation
+(LREC 2012), pages 4015–4018.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)104Zhemin Zhu, Delphine Bernhard, and I. Gurevych.
+2010. A monolingual tree-based translation model
+for sentence simpliﬁcation. In Proceedings of The
+23rd International Conference on Computational
+Linguistics, pages 1353–1361. Association for Com-
+putational Linguistics.
+
+Kevin Knight and Daniel Marcu. 2000. Statistics-
+based summarization-step one: Sentence compres-
+sion. In AAAI/IAAI, pages 703–710.
+
+Matthias T Kromann. 2003. The Danish Dependency
+Treebank and the DTAG treebank tool. In Proceed-
+ings of the Second Workshop on Treebanks and Lin-
+guistic Theories (TLT), page 217.
+
+John Lafferty, Andrew McCallum, and Fernando CN
+Pereira. 2001. Conditional random ﬁelds: Prob-
+abilistic models for segmenting and labeling se-
+quence data.
+
+Ryan McDonald. 2006. Discriminative sentence com-
+
+pression with soft syntactic evidence. In EACL.
+
+Anneli Olsen. 2012. The tobii i-vt ﬁxation ﬁlter. Tobii
+
+Technology.
+
+Slav Petrov, Dipanjan Das, and Ryan McDonald. 2011.
+A universal part-of-speech tagset. Arxiv preprint
+ArXiv:1104.2086.
+
+Keith Rayner, Kathryn H Chace, Timothy J Slattery,
+and Jane Ashby. 2006. Eye movements as reﬂec-
+tions of comprehension processes in reading. Scien-
+tiﬁc Studies of Reading, 10(3):241–255.
+
+Keith Rayner, Alexander Pollatsek, and D Reisberg.
+The Oxford
+2013. Basic processes in reading.
+Handbook of Cognitive Psychology, pages 442–461.
+
+Sarah E Schwarm and Mari Ostendorf. 2005. Reading
+Level Assessment Using Support Vector Machines
+In Proceedings
+and Statistical Language Models.
+of the 43rd Annual Meeting of the ACL, pages 523–
+530.
+
+Advaith Siddharthan and Napoleon Katsos. 2012. Of-
+ﬂine sentence processing measures for testing read-
+ability with users. In Proceedings of the First Work-
+shop on Predicting and Improving Text Readability
+for target reader populations, pages 17–24. Associ-
+ation for Computational Linguistics.
+
+Sara Stymne, J¨org Tiedemann, Christian Hardmeier,
+and Joakim Nivre. 2013. Statistical machine trans-
+lation with readability constraints. In Proceedings of
+the 19th Nordic Conference on Computational Lin-
+guistics (NODALIDA’13), pages 375–386.
+
+Sowmya Vajjala and Detmar Meurers. 2014. Explor-
+ing measures of readability for spoken language:
+Analyzing linguistic features of subtitles to iden-
+In Proceedings of
+tify age-speciﬁc tv programs.
+the 3rd Workshop on Predicting and Improving Text
+Readability for Target Reader Populations (PITR)@
+EACL, pages 21–29.
+
+Kristian Woodsend and Mirella Lapata. 2011. Wik-
+iSimple: Automatic Simpliﬁcation of Wikipedia Ar-
+In Twenty-Fifth AAAI Conference on Artiﬁ-
+ticles.
+cial Intelligence.
+
+Proceedings of the 20th Nordic Conference of Computational Linguistics (NODALIDA 2015)105
+
+######################
+## output of PY2PDF ##
+######################
+
+WithinspirationfromMcDonald(2006),we
+trainasentencecompressionsystemonacorpus
+ofparallelsentencesofmanuallye
+
+andoriginalnewswiretextwhereall
+
+tionsarecompressions.Thesystemisdescribed
+
+indetailinsection2.
+Sentencecompressionworksbysimplydrop-
+pingpartsofasentenceandoutputtingtheshorter
+
+sentencewithlessinformationcontentandsimpler
+syntax.Thisapproachallowsustocontrolanum-
+berofvariables,andinparticular,itguarantees
+
+thateachexpertandeachsystem
+
+outputaretruesubsetsoftheoriginalinput,pro-
+
+vidingthreehighlycomparableversionsofeach
+sentence.Furtherthesystemservesasaproof
+ofconceptthatarelativelysmallamountoftask-
+
+datacanbesufforthistask.
+Sentencecompressionis,inaddition,animpor-
+tantstepinseveraldownstreamNLPtasks,includ-
+
+ingsummarization(KnightandMarcu,2000)and
+
+machinetranslation(Stymneetal.,2013).
+Below,wepresenttheautomatic
+setup,includingtheparalleldata,featuresand
+
+modelselectionanddetailsonhowweselectthe
+datafortheeye-trackingexperiment.Thefollow-
+ingsectiondetailstheeyemovementrecording
+
+andsubjectiveevaluationsetup.Section4presents
+
+ourresultsfollowedbyadiscussionandourcon-
+
+clusions.2AutomaticSetup
+2.1TrainingandEvaluationCorpus
+Forthesentencecompressiontrainingandevalu-
+ationdataweextractedasubsetofordinaryand
+
+newswiretextsfromtheDanishDSim
+corpus(KlerkeandSøgaard,2012).InFigure1
+wegiveaschematicoverviewofhowthedatafor
+
+ourexperimentswasobtained.
+Formodeldevelopmentandselectionweex-
+tractedallpairsoforiginalandsen-
+
+tencesunderthefollowingcriteria:
+1.Nosentencepairdiffersbymorethan150
+charactersexcludingpunctuation.
+2.Thesentencemustbeastrictsub-
+setoftheoriginalandcontainaminimumof
+
+fourtokens.
+3.Theoriginalsentencemusthaveatleastone
+additionaltokencomparedtothe
+sentenceandthisdifferencemustbenon-
+
+punctuationandofminimumthreecharac-
+
+ters'length.
+Thisresultsinacorpusof2,332sentencepairs,
+
+closeto4%oftheDSimcorpus.Descriptive
+
+statisticsofthiscorpusareshowninTable1.
+Wefollowedthetrain-dev-testsplitoftheDSim
+corpusformingatrainingsetof1,973sentence
+
+pairs,adevelopmentsetof239pairs,andatest
+
+setof118pairs.
+1Forourexperimentwitheyetrackingandsub-
+jectiveevaluationwecreatedasimilardataset,
+
+denotedﬁaugmentedcompressionsﬂinFigure1,
+fromsentencepairsdisplayingsimilarcompres-
+sionsandinadditionexactlyonelexicalsubstitu-
+
+tion.Weaugmentedthesepairsbysimplychang-
+
+ingthesynonymbacktotheoriginalwordchoice,
+
+resultinginavalidcompression.Weobtained
+anautomaticallycompressedversionofthesesen-
+tencesfromthetrainedmodel
+2.Thisresultsina
+corpusofsentencetriplesconsistingofan
+origi-nal,an
+expertanda
+systemgener-
+atedversion.Insomecasesthesystemoutputwas
+identicaltoeithertheoriginalinputortotheex-
+pertWethereforeselectedtheeval-
+
+uationdatatoincludeonlysentencetripleswhere
+
+allthreeversionswereinfactdifferentfromone
+
+anotherresultingin140sentencetriples,i.e.420
+
+individualstimuli.Onaveragethesystemdeleted
+15tokenspersentencewhiletheexpertsaverage
+around12tokendeletionspersentence.
+2.2CompressionModelandFeatures
+Thecompressionmodelisaconditionalrandom
+(CRF)modeltrainedtomakeasequenceof
+categoricaldecisions,ineachdeterminingwhether
+thecurrentwordshouldbeleftoutofthecompres-
+
+sionoutputwhiletakingintoaccounttheprevious
+
+decision.WeusedCRF++(Laffertyetal.,2001)
+
+trainedwithdefaultparametersettings.
+Below,wedescribethefeaturesweimple-
+mented.Thefeaturesfocusonsurfaceform,PoS-
+
+tags,dependenciesandwordfrequencyinforma-
+
+tion.Ourinitialchoiceoffeaturesisbasedonthe
+
+comparisonsinFengetal.(2010)andFalkenjack
+
+andJ
+¨onsson(2014),whoboththatparsing
+1ThecorpuswasPoS-taggedandparsedusingtheBohnet
+parser(Bohnet,2010)trainedontheDanishDependency
+Treebank(Kromann,2003)withUniversalPoS-tags(Petrov
+
+etal.,2011).
+2Notethatthisdatasetdidnotcontributetotraining,tun-
+ingorchoosingthemodel.
+
+
+
+Figure1:Weextractobservedcompressionsfromthecorpusandtrainanautomaticcom-
+pressionmodel.Fortheeyetrackingandsubjectiveevaluationwerunthemodelondatathatwasnot
+usedfortraining.Weonlykeepautomaticcompressionsthataredifferentfromboththeinputandthe
+
+expertcompression.Augmentedcompressionsaresimilartocompressions,butinadditiontheydis-
+
+playonelexicalsubstitution.Weaugmentthesebysubstitutingtheoriginalsynonymbackintheexpert
+
+therebymakingitacompression.
+OriginalnewswireExpertcompressions
+Difference
+CharactersTokensCharactersTokens
+%deletedtokens
+Total288,22646,088133,71521,303
+53.8%Mean123.619.857.39.1
+51.0%Std43.27.124.54.0
+18.2%Range24Œ2915Œ4515Œ1784Œ33
+4.4%Œ86.2%
+Table1:Statisticsonthefullspecializedcorpus,2.332sentencepairsintotal.ExceptfortherowﬁTotalﬂ,
+
+statisticsarepersentence.ﬁDifferenceTokensﬂreporttheaverage,standarddeviationandrangeofthe
+
+proportionalchangeinnumberoftokenspersentence.
+featuresareusefulwhilethegainfromaddingfea-
+turesbeyondshallowfeaturesanddependenciesis
+
+limited.IntheCRF++featuretemplatewespeci-
+
+eachfeaturetoincludeawindowofupto+/-2
+tokens.Inadditionweincludedallpairwisecom-
+binationsoffeaturesandthebigramfeatureoption
+
+whichaddsthemodel'spreviousdecisionasafea-
+
+tureforthecurrenttoken.
+Shallow
+FORM
+,POS
+,CASE
+:Thisgroupcon-
+sistsofthelowercasewordform,universalPoS-
+
+tagandtheoriginalcaseoftheword.
+LengthWLENGTH
+,SLENGTH
+:Thisgroup
+registersthewordlength(characters)andsentence
+
+length(tokens).
+Position
+PLACE
+,NEG
+PLACE
+,REL
+TENTH
+,THIRDS
+:Thisgrouprecordsthetokenindices
+fromboththebeginningandendofthesentence,
+
+aswellaseachtoken'srelativepositionmeasured
+
+intenthsandinthirdsofthesentencelength.
+Morphology
+BIGRAM
+,TRIGRAM
+,FOUR
+-GRAM
+:Thegrouprecordsthetwo,threeand
+fourcharactersofeachtokenforalltokensofat
+leastfour,veandsixcharacters'length,respec-
+
+tively.
+DependenciesDEP
+HEAD
+,DEP
+LABEL
+:These
+twofeaturescapturetheindexoftheheadofthe
+tokenandthedependencylabelofthisdependency
+relation.Vocabulary
+OOV
+,FREQ
+3,
+FREQ
+5,
+FREQ
+10
+PS
+,FREQ
+10
+EXP
+:Thisfeaturegroup
+recordsarangeoffrequency-counts
+3.The
+featurerecordsout-of-vocabularywords,the
+
+remainingfeaturesassignthetokentooneof3,
+
+5or10binsaccordingtoit'sfrequency.
+4Inthe
+10-bincasesﬁPseudotenthsﬂ(PS)assignsthe
+tokentooneof10binseachrepresentinganequal
+numberofwordforms
+5,whileﬁExponentialﬂ
+3WeusedtheDanishreferencecorpusKorpusDK(As-
+mussen,2001)concatenatedwiththetrainingpartofthe
+DSimcorpus
+43bins:in1Kmostfrequenttokens(mft),5Kmftorout-
+side5Kmft.5bins:in100mft,500mft,1Kmft,5Kmftor
+
+outside5Kmft.
+5Threelargebinswereassignedwordformsoccurring1,
+2and3timesrespectivelywhiletheremainingwordforms
+weresortedinsevenbinsofequalnumberofwordforms
+
+
+
+splitsthevocabularyinto10binscontaininga
+decreasingnumberofwordformsasthecontained
+wordformfrequenciesriseexponentially.
+2.3FeatureSelection
+Wetestedvetypesoffeatureselectiononthede-
+velopmentsetofthecorpus,namelysinglebest
+
+feature,singlebestfeaturegroup,add-one,and
+
+feature-wiseandgroup-wisefeatureablation.On
+thedevelopmentsetthesinglebestfeaturewas
+POSalone,thesinglebestfeaturegroupwasthe
+
+Shallowgroupalone,whiletheadd-one-approach
+
+returnedthecombinationofthethreefeatures
+FORM
+,PLACE
+andFREQ
+10
+PS
+,andsinglefea-
+tureablationreturnedallindividualfeaturesmi-
+
+nusFREQ
+10
+EXP
+,OOV
+,REL
+TENTHS
+,andgroup-
+wiseablationfavoredallgroupsminustheVo-
+
+cabularyandShallowgroups.Ofthese,thelast
+
+model,chosenwithgroup-wisefeatureablation,
+obtainedthebestF1-scoreonthetestset.We
+usethismodel,whichincludethefeaturegroups
+
+Length,Position,MorphologyandDependencies,
+
+togeneratesystemoutputforthesubsequentex-
+
+periments.3HumanEvaluation
+Theexperimentdescribedinthefollowingsection
+consistedofaneyetrackingpartandasubjective
+
+evaluationpart.Theeyetrackingpartoftheex-
+
+perimentwascarriedoutandwasfollowedby
+
+thesubjectiveevaluationpart,whichwascarried
+outbyemailinvitationtoanonlinesurvey.
+Werecruited24studentsaged20to36with
+Danishaslanguage,6maleand18female.
+Allhadnormalorcorrected-to-normalvision.
+Noneoftheparticipantshadbeendiagnosedwith
+dyslexia.Atotalof20participantscompletedthe
+
+evaluationtask.Theexperimentwasabalanced
+
+andrandomizedLatin-squaredesign.Thisdesign
+
+ensuredthateachparticipantsawonlyonever-
+sionfromeachsentence-triplefromonehalfofthe
+datasetwhilebeingeye-tracked.Afterwardspar-
+
+ticipantswereaskedtoassignrelativeranksbe-
+
+tweenallthreeversionsineachsentence-triplein
+
+thehalfofthedatasetwhichtheyhadnotprevi-
+ouslyseen.Intotal,eachversionofeachsentence
+wasreadbyfourparticipantsintheeye-tracking
+
+experimentandrankedby9-11otherparticipants.
+Inthesubjectiveevaluationtaskparticipants
+hadtoproduceastrictorderingbyreadabilityof
+
+allthreeversionsofeachsentence,withtherank
+`1'designatingthemostreadablesentence.Pre-
+
+sentationorderwasfullyrandomized.
+3.1EyeTrackingDesign
+Thestimuliwerepresentedonascreenwith
+1080x1920resolution,andeyemovementswere
+
+recordedwithaTobiiX120binoculareyetracker
+
+at60hz.WeusedtheIV-Twithstan-
+dardparametersettings(Olsen,2012).Theeye
+trackerwascalibratedtoeachparticipant.
+Eachstimuluswaspresentedononescreenwith
+left,topandrightmarginsof300pxand1-6lines
+
+perslide
+6.ThefontvasVerdana,size60pxand
+linespacingwas0.8em
+7.Participantsweregivenwritteninstructionsand
+threedemotrialsbeforetheywereleftaloneto
+
+completetheexperiment.Allparticipantscom-
+
+pleted72trialsinthreeblocks,withtheoption
+
+totakeashortbreakbetweenblocks.Eachtrial
+consistedofascreenvisiblefor1.5sec-
+onds,followedbystimulusonset.Theparticipants
+
+wereinstructedtotrytonoticeifeachsentence
+
+wascomprehensibleandtopressakeytoproceed
+
+tothefollowingtrialassoonastheyhad
+
+reading.Thissetuponlyencouragesbutdoesnotrequire
+participantstoreadforcomprehension.Through
+
+datainspectionandinformalquestionsafterthe
+experiment,weascertainedthatallparticipants
+wereinfactreadingandtryingtodecidewhich
+
+sentenceswerecomprehensible.
+3.2Eye-movementMeasures
+Eyemovementsinreadingcanbedividedinto
+andsaccades.Saccadesarerapideye
+movementsbetweenandare
+
+briefperiodsofrelativelystationaryeyepositions
+
+whereinformationcanbeobtainedfromanarea
+
+coveringthecentral1-2degreesofthevisual
+Becausereadingislargelysequential,wecanob-
+serveregressions,whichdenoteepisodesofre-
+
+reading,thatis,directedattextwhichis
+
+locatedearlierinthetextthanthefurthest
+
+word(Holmqvistetal.,2011).
+Inouranalysesweincludethemeasuresofeye
+movementsdescribedbelow.Allmeasuresarecal-
+
+culatedpersinglesentencereadingandaveraged
+6Afterrecording,sentenceswithsevenlinesweredis-
+cardedduetodataqualitylossattheloweredgeofthescreen
+7FollowingBlache(2012)whoshowthattheviewingpat-
+ternswithlargetextsizesarecomparabletosmallertextsizes
+andcanbedetectedwiththistypeofeyetracker.
+
+
+
+overallfourindividualreadingsofeachversion
+ofeachsentence.
+Fixationcount(Fix)
+,theaveragetotalnumber
+ofpersentence.Thismeasureisexpected
+
+tovarywithsentencelength,withmoretextre-
+quiringmore
+Totalduration(ms)
+,theaveragetimespent
+readingtheentiresentence.Thismeasureisex-
+
+pectedtoincreasewithsentencelengthandwith
+
+sentencecomplexity.
+Fixationsperword(Fix/w)
+,theaveragenum-
+berofperword.Thismeasureissensitive
+
+tothenumberofsaccadesrelativetothesentence
+lengthandisexpectedtothereader'scon-
+fusionasmoreareneededtocollectad-
+
+ditionalinformation.Itshouldalsobeexpectedto
+
+besensitivetohighamountsoflongwords.
+Readingtimeperword(ms/w)
+,theaverage
+timespentperword.Thismeasureincreaseswith
+
+slowerpacedreading,regardlessofthenumberof
+
+Readingtimeisconsideredameasure
+ofprocessingcostandisbybothlexi-
+calandsyntacticcomplexity.
+Proportionregressions(%-regr)
+,thepropor-
+tionofspentonpartsofthetextthatwere
+
+alreadypassedonce.Thismeasureistypically10-
+
+15%infullparagraphs,andisexpectedtoincrease
+
+withsentencecomplexity.(Rayneretal.,2006)
+Weincludethesentencelengthasnumberof
+words(n-words)inouranalysesforcomparison
+
+becausesentencelengthcanthereading
+strategy(Holmqvistetal.,2011).
+Longersentenceswilltypicallyhaveamore
+complexsyntaxthanshortsentencesduetothe
+numberofentitiesthatneedtobeintegratedinto
+
+boththesyntacticandmentalrepresentationofthe
+
+sentence.However,unfamiliarorevenerroneous
+
+wordsandsyntaxcanaddprocessingdif
+aswell,leavingthereadertoguesspartsofthein-
+tendedmessage.Weconsiderallthesecasesunder
+
+theterm
+complexity
+astheyarealllikelytoappear
+inautomaticallyprocessedtext.Thisisanatural
+
+consequenceofthefactthatstatisticallanguage
+processingtoolsaretypicallynotabletodistin-
+guishbetweenextremelyrare,butadmissibletext
+
+useandtextthatwouldbejudgedasinvalidbya
+
+reader.
+4Results
+Weanalyzethecorrelationofthesubjective
+evaluationsfollowedbyanalysesthatcompareeye
+movementmeasures,subjectiverankingsandsen-
+
+tenceversion.
+4.1Ranking
+Firstwetestwhetherthesubjectiverankingsare
+similarbetweensubjects.Weestimateagreement
+
+withKendall's
+tBassociationstatistic,whichis
+apairwisecorrelationcoefappropriatefor
+
+comparingrankorderings.Therangeof
+tBis[1;1]where-1indicatesperfectdisagreement,
+i.e.onerankingisthepreciseoppositeorderof
+
+theother,1indicatesperfectagreementand0in-
+
+dicatesnoassociation,thatis,theorderoftwoel-
+
+ementsinonerankingisequallylikelytobethe
+sameandtheoppositeintheotherranking.The
+odds-ratioofapairofelementsbeingrankedcon-
+
+cordantlyis
+(1+tB)=(1tB).Themetric
+tBcom-parespairsofrankings,andwethereforecalculate
+
+theaverageoverallpairsofparticipants'agree-
+mentoneachrankingtask.Weusetheone-tailed
+one-samplestudent'st-testtotestwhethertheav-
+
+erageagreementbetweenall91uniquepairsofan-
+
+notatorsisdifferentfrom0.Ifthe
+
+rankingsareawardedbasedonasharedunder-
+standingandperceptionofreadability,weexpect
+theaverageagreementtobepositive.
+Wethattheaverage
+tBis0
+:311(p<0:0001).Thiscorrespondstoaconcordanceodds-
+ratioof1.90whichmeansthatitisalmosttwiceas
+likelythattwoannotatorswillagreethandisagree
+onhowtoranktwoversionsofasentence.Al-
+
+thoughthisresultisstronglywenote
+
+thatitisasurprisinglylowagreementgiventhat
+
+thechanceagreementishighfortwopeoplerank-
+
+ingthreeitems.
+Therelativelylowsystematicagreementcould
+ariseeitherfromannotatorsrankingonlyafew
+
+traitssystematically(e.g.syntaxerrorsranklow
+
+whenpresentandotherwiserankingisrandom)
+
+oritcouldresultfromannotatorsfollowingfully
+systematicbutonlyslightlyoverlappingstrate-
+giesforranking(e.g.oneranksbynumberof
+
+longwordswhileanotherranksbysentencelength
+
+whichwouldtendtooverlap).
+4.2EyeTracking
+Oursecondanalysistestshowwellthesubjec-
+tiverankingofsentencescorrespondtoeyemove-
+
+ments.Weexpectthatmorecomplextextwill
+
+slowdownreaders,andwewanttoknowwhether
+
+theperceivedreadabilitythevariationwe
+
+observeineye-movementmeasures.Againusing
+
+
+
+Differenceinmedians
+SystemŒExpertSystemŒOriginalOriginalŒExpertExpertŒBrokenBrokenŒOriginal
+avg.rank
+0.25*-0.47***-0.73***-1.51***0.78***ms-7.5msŒ
+-190.0ms
+***182.5ms
+***-2msŒ
+-168ms
+***Fix-0.8Œ
+-14.0
+***13.3
+***-1.3Œ
+-11
+***ms/w3.0msŒ-3.0msŒ
+6ms
+**-13ms
+**-3msŒ
+0.1Œ
+0.4
+***-0.27
+**-0.19Œ
+0.36
+**%-regr
+4pp
+**1ppŒ
+5pp
+***11pp
+***2ppŒ
+n-words
+-1word
+*-2words
+*1wordŒ0wordsŒ-5wordsŒ
+Table2:ofsentencevariantandbrokennessonperceivedreadabilityandeyemovements.
+WhencomparingExpert,OriginalandSystem109sentencesareincludedwhileforBrokenonly27
+sentencesarecompared.Starsdenotelevels:*:
+p<:
+05,**:
+p<:
+01,***:
+p<:
+001Figure2:Interactionofsentencetypeandbroken-
+nessonperceivedreadabilityandeyemovements.
+(N=27)thetBassociation,wenowassignrankswithin
+eachsentence-triplebasedoneacheye-tracking
+measureandcomparethesepseudo-rankingsto
+thetypicalrank
+assignedbytheannotators.
+8We
+thatneithersentencelengthoranyofthe
+
+eyetrackingmeasuresareassociated
+
+withthe
+typicalrank
+.Thismeansthatwedo
+notobserveanycorrelationbetweensentences'
+8Thisapproachintroducestieswhicharehandledbythe
+tBstatisticbuttheresultnotablysinceeachrank-
+ingtaskonlyincludes3items.
+perceivedreadabilityandthesentencelength,the
+
+timeittakestoreaditorthespeedornumberof
+
+orproportionofregressionsrecorded.
+Onepotentialreasonwhywedonotobserve
+theexpectedassociationbetweenrankandeye
+
+movementscanbethatseveralofoureyetrack-
+
+ingmeasuresareexpectedtovarydifferentlywith
+sentencelengthandcomplexity,whereasreaders'
+readabilityrankingsarenotnecessarilyvarying
+
+consistentlywithanyofthesedimensionsaspar-
+
+ticipantsareforcedtotheirexperience
+
+intoaone-dimensionalevaluation.
+Inordertoinvestigatewhethertheeyemove-
+mentsdoinfactdistinguishbetweenlengthand
+
+complexityinsentences,wecomparehowreaders
+
+readandranklongoriginalsentences,shortexpert
+andshort,syntacticallybrokensys-
+temoutput.
+Thesystemoutputwasposthoccategorizedby
+syntacticacceptabilitybythemainauthoranda
+
+colleague,resultinginasampleof27sentence
+
+tripleswithsyntacticallyunacceptablesystemand
+
+asampleof109fullysyntacticallyacceptablesen-
+
+tencetriples.Thisallowsustocomparethefol-
+lowingfourgroups,Original,Expert,Unbroken
+SystemandBrokenSystem.
+Wecomparealleye-movementmeasuresand
+rankingforeachpairofgroups
+9andtestwhether
+themeasuresdifferbetweengroups
+
+usingtheWilcoxonsigned-ranktest.Wereportthe
+
+comparisonsasthedifferencebetweenthemedi-
+
+ansinTable2.Thisissimilartoanunnormalized
+Cohen'sdeffectsize,butusingthemedianasesti-
+mateofthecentraltendencyratherthanthemean.
+
+Weobservethatallgroup-wisecomparisonsre-
+
+ceivedifferentaverageranks,ranging
+
+fromtheUnbrokenSystemscoringaquarterofa
+9WeusethelargersamplewheneverthegroupBroken
+Systemisnotpartofthecomparison.
+
+
+
+rank-positionbetterthantheExpertcompressions
+totheBrokenSystemoutputfairing1.51rankpo-
+sitionsworsethantheExpertgroup.
+NotethatBrokenSystemisalsoranked
+cantlybelowtheOriginalnewswiresentences,sig-
+nalingthatbadsyntaxhasastrongerimpacton
+perceivedreadabilitythanlength.Eventhough
+
+thesampleofBrokenSystemsentencesissmall,
+
+overallreadingtimeandnumberofdis-
+
+tinguishthelongOriginalsentencesfromboth
+theshortExpertandBrokenSys-
+temoutputs,thatarecomparablyshort.Wealso
+
+observethatthenumberofperwordis
+
+consistentlylowerforthelongOriginalsentences
+
+comparedtotheother,shortergroups.Impor-
+
+tantly,weobservethattwomeasures
+distinguishExpertfromsyntacti-
+callyBrokenSystemoutput,namelyreadingtime
+
+perword,whichisslowerforBrokenSystemsyn-
+
+taxandproportionofregressionswhichismuch
+
+higherinBrokenSystemsentences.Inaddition
+andastheonlyeye-trackingmeasure,proportion
+ofregressionsalsodistinguishesbetweenUnbro-
+
+kenSystemoutputandExpert,in-
+
+dicatinga4percentagepointincreaseinpropor-
+
+tionofregressionswhenreadingUnbrokenSys-
+temoutput.
+InFigure2weshowhowthemediansofall
+themeasuresvaryinthesmallsubsetthatcon-
+tainBrokenSystemoutput,Expertcompressions
+andOriginalnewswire.Theillustrates
+howthedifferentaspectsofreadingbehaviorre-
+
+lengthandsyntaxdifferently,withregres-
+
+sionsmostcloselyfollowingthesubjectiverank-
+
+ing(top).
+5Discussion
+Inthefollowingsectionwediscussweaknesses
+andimplicationsofourresults.
+5.1LearningandScoringtheCompression
+ModelItisimportanttonotethatthecompressionmodel
+inherentlyreliesontheexpertcompresseddata,
+
+whichmeansitpenalizesanydeviationfromthe
+singlegoldcompression.Thisbehaviorissub-
+optimalgiventhatvariousgood
+
+usuallycanbeproducedbydeletionandthatal-
+
+ternativegoodcompressionsarenotnecessarily
+
+overlappingwiththegoldcompression.Oneex-
+amplewouldbetopickeitherpartofasplitsen-
+tencewhichcanbeequallygoodbutwillhavezero
+overlapandcountasanerror.Ourresultssuggest
+
+thattheframeworkisstillviabletolearnauseful
+model,whichwouldneedapost-processingsyn-
+taxchecktoovercomethesyntaxerrorsarisingin
+
+thedeletionprocess.
+Wenotethatthemodelproducesmoreaggres-
+sivedeletionsthantheexperts,sometimesproduc-
+ingsentencesthatsoundmorelikeheadlinesthan
+thebodyofatext.Itissurprisingthatthisisthe
+
+case,asitistypicallyconsideredeasiertoimprove
+
+thereadabilityslightly,butwespeculatethatthe
+
+behaviorcouldthatthepartsofthetraining
+datawithheadline-likecharacteristicsmaypro-
+videastrong,learnablepattern.However,froman
+
+applicationperspective,itwouldbesimpletoex-
+
+ploitthisinastackedmodelsetup,wheremodels
+
+trainedtoexhibitdifferentcharacteristicspresent
+arangeofalternativetoahigher-
+levelmodel.
+Frominspectionsoftheoutputweobservethat
+theclausetendstobekept.Thismaybe
+
+domain-dependentoritmaythatPoS-tags
+andparsingfeaturesaremorereliableinthebe-
+ginningofthesentence.Thiscouldbetestedin
+
+thefuturebyapplyingthemodeltotextfroma
+
+domainwithdifferentinformationstructure.
+5.2ImplicationsforSystemDevelopment
+Wefoundthattheverysimplecompressionmodel
+presentedinthispaperwasperformingextensive
+whichisimportantinlightofthe
+
+factthathumansconsiderithardertoproduce
+
+moreaggressiveWetrainedour
+
+modelonarelativelysmall,specializedcompres-
+sioncorpus.TheSimpleEnglishWikipediasim-
+corpus(SEW)(CosterandKauchak,
+
+2011),whichhasbeenusedinarangeofstatistical
+
+textonsystems(CosterandKauchak,
+
+2011;Zhuetal.,2010;WoodsendandLapata,
+2011),isfarbigger,butalsonoisier.Wefound
+fewerthan50sentencepairsourcompres-
+
+sioncriteriawhenexploringthepossibilityofgen-
+
+eratingasimilartrainingsetforEnglishfromthe
+
+SEW.However,infuturework,other,smallersim-
+corporacouldbeadaptedtothetask,
+providinginsightintotherobustnessofusingcom-
+
+pressionfor
+5.3ImplicationsforEvaluationMethodology
+Inmanynaturallanguagegenerationandmanipu-
+lationsetups,itisimportantthatthesystemisable
+
+
+
+torecognizeacceptableoutput,anditistypical
+ofthistypeofsetupthatneithersystem-intrinsic
+scoringfunctionsorasstandardautomaticevalu-
+
+ationproceduresarereliablymeetingthisrequire-
+
+ment.Insuchcasesitiscommontoobtainex-
+
+pensivespecializedhumanevaluationsoftheout-
+
+put.Ourresultsareencouragingastheysuggest
+thatbehavioralmetricslikeregressionsandread-
+ingtimethatcanbeobtainedfromnavesubjects
+
+simplyreadingsystemoutputmayprovideanaf-
+
+fordablealternative.
+5.4BrokennessinNLPoutput
+Theexperimentswehavepresentedaretargeting
+aproblemtotheofcomputermanip-
+ulationoftexts.Incontrasttohuman-writtentext,
+languagegenerationsystemstypicallycannotfully
+
+guaranteethatthetextwillbeandcoherent
+
+inbothsyntaxandsemantics.Earlierresearchin
+
+readabilityhasfocusedonhowless-skilledread-
+ers,likechildren,dyslecticreadersandsecond-
+languagereaders,interactwithnaturaltext,often
+
+inparagraphsorlongerpassages.Itisimportantto
+
+determinetowhatextenttheexistingknowledge
+
+inthesecanbetransferredtocomputational
+
+linguistics.6Conclusion
+Wehavecomparedsubjectiveevaluationsandeye-
+movementdataandshownthathuman
+
+cationsandautomaticsentencecompressionsof
+
+newswireproducevariationsineyemovements.
+Wefoundthatthemainsourceofdifin
+processingmachine-compressedtextisungram-
+
+maticality.Ourresultsfurthershowthatboththe
+
+humanandthegrammaticalauto-
+maticsentencecompressionsinourdataareeasier
+toprocessthantheoriginalnewswiretext.
+Regressionsandreadingspeedwerefoundtobe
+goodcandidatesforrobust,transferrablemeasures
+
+that,withincreasingaccesstoeye-trackingtech-
+nology,arestrongcandidatesforbeingdirectlyin-
+corporatedintolanguagetechnologies.
+Wehaveshownthatthesemeasurescancapture
+differencesinskilledreaders'reading
+ofsinglesentencesacrosssubjectsandwitheco-
+logicallyvalidstimuli.Infutureresearchwewish
+
+toexplorethepossibilityofpredictingrelevant
+
+readingbehaviorforprovidingfeedbacktoNLP
+
+systemslikeautomatictextandsen-
+tencecompression.
+References
+MarceloAdrianoAmancio,UKShefandLucia
+Specia.2014.Ananalysisofcrowdsourcedtext
+In
+Proceedingsofthe3rdWorkshop
+onPredictingandImprovingTextReadabilityfor
+
+TargetReaderPopulations(PITR)@EACL
+,pages
+123Œ130.JørgAsmussen.2001.Korpus2000.
+Korpuslingvistik
+(NyS30).RebekahGeorgeBenjamin.2012.Reconstructing
+readability:Recentdevelopmentsandrecommenda-
+tionsintheanalysisoftextdif.
+EducationalPsychologyReview
+,24(1):63Œ88.
+Carl-HugoBjornsson.1983.ReadabilityofNewspa-
+persin11Languages.
+ReadingResearchQuarterly
+,18(4):480Œ497.PhilippeBlache,StephaneRauzy.2012.Robustness
+andprocessingdifmodels.apilotstudyfor
+
+eye-trackingdataonthefrenchtreebank.In
+24thIn-
+ternationalConferenceonComputationalLinguis-
+
+tics,page21.
+BerndBohnet.2010.Veryhighaccuracyandfastde-
+pendencyparsingisnotacontradiction.In
+Proceed-
+ingsofthe23rdInternationalConferenceonCom-
+putationalLinguistics
+,pages89Œ97.Associationfor
+ComputationalLinguistics.
+WilliamCosterandDavidKauchak.2011.SimpleEn-
+glishWikipedia:anewtexttask.In
+
+Proceedingsofthe49thAnnualMeetingoftheAsso-
+
+ciationforComputationalLinguistics:HumanLan-
+
+guageTechnologies:shortpapers-Volume2
+,vol-
+
+ume2,pages665Œ669.AssociationforComputa-
+
+tionalLinguistics.
+JohanFalkenjackandArneJ
+¨onsson.2014.Classify-
+ingeasy-to-readtextswithoutparsing.In
+Proceed-
+ingsofthe3rdWorkshoponPredictingandImprov-
+
+ingTextReadabilityforTargetReaderPopulations
+(PITR)@EACL
+,pages114Œ122.
+LijunFeng,MartinJansche,MattHuenerfauth,and
+No´emieElhadad.2010.Acomparisonoffeatures
+forautomaticreadabilityassessment.In
+Proceed-
+ingsofthe23rdInternationalConferenceonCom-
+putationalLinguistics:Posters
+,pages276Œ284.As-
+
+sociationforComputationalLinguistics.
+RudolphFlesch.1948.Anewreadabilityyardstick.
+Journalofappliedpsychology
+,32(3):221.
+KennethHolmqvist,MarcusNystr
+¨om,RichardAn-
+dersson,RichardDewhurst,HalszkaJarodzka,and
+
+JoostVandeWeijer.2011.Eyetracking:Acom-
+
+prehensiveguidetomethodsandmeasures.
+SigridKlerkeandAndersSøgaard.2012.DSim,a
+DanishParallelCorpusforTextIn
+
+ProceedingsofLanguageResourcesandEvaluation
+
+(LREC2012)
+,pages4015Œ4018.
+
+
+
+KevinKnightandDanielMarcu.2000.Statistics-
+basedsummarization-stepone:Sentencecompres-
+sion.In
+AAAI/IAAI,pages703Œ710.
+MatthiasTKromann.2003.TheDanishDependency
+TreebankandtheDTAGtreebanktool.In
+Proceed-
+ingsoftheSecondWorkshoponTreebanksandLin-
+
+guisticTheories(TLT)
+,page217.
+JohnLafferty,AndrewMcCallum,andFernandoCN
+Pereira.2001.ConditionalrandomProb-
+
+abilisticmodelsforsegmentingandlabelingse-
+
+quencedata.
+RyanMcDonald.2006.Discriminativesentencecom-
+pressionwithsoftsyntacticevidence.In
+EACL
+.AnneliOlsen.2012.Thetobiii-vt.
+Tobii
+Technology
+.SlavPetrov,DipanjanDas,andRyanMcDonald.2011.
+Auniversalpart-of-speechtagset.
+Arxivpreprint
+ArXiv:1104.2086.KeithRayner,KathrynHChace,TimothyJSlattery,
+andJaneAshby.2006.Eyemovementsas
+
+tionsofcomprehensionprocessesinreading.
+Scien-StudiesofReading
+,10(3):241Œ255.
+KeithRayner,AlexanderPollatsek,andDReisberg.
+2013.Basicprocessesinreading.
+TheOxford
+HandbookofCognitivePsychology
+,pages442Œ461.
+SarahESchwarmandMariOstendorf.2005.Reading
+LevelAssessmentUsingSupportVectorMachines
+
+andStatisticalLanguageModels.In
+Proceedings
+ofthe43rdAnnualMeetingoftheACL
+,pages523Œ
+530.AdvaithSiddharthanandNapoleonKatsos.2012.Of-
+sentenceprocessingmeasuresfortestingread-
+abilitywithusers.In
+ProceedingsoftheFirstWork-
+shoponPredictingandImprovingTextReadability
+
+fortargetreaderpopulations
+,pages17Œ24.Associ-
+
+ationforComputationalLinguistics.
+SaraStymne,J
+¨orgTiedemann,ChristianHardmeier,
+andJoakimNivre.2013.Statisticalmachinetrans-
+
+lationwithreadabilityconstraints.In
+Proceedingsof
+the19thNordicConferenceonComputationalLin-
+
+guistics(NODALIDA'13)
+,pages375Œ386.
+SowmyaVajjalaandDetmarMeurers.2014.Explor-
+ingmeasuresofreadabilityforspokenlanguage:
+
+Analyzinglinguisticfeaturesofsubtitlestoiden-
+
+tifytvprograms.In
+Proceedingsof
+the3rdWorkshoponPredictingandImprovingText
+
+ReadabilityforTargetReaderPopulations(PITR)@
+
+EACL
+,pages21Œ29.
+KristianWoodsendandMirellaLapata.2011.Wik-
+iSimple:AutomaticSimpliofWikipediaAr-
+
+ticles.In
+Twenty-FifthAAAIConferenceon
+cialIntelligence
+.ZheminZhu,DelphineBernhard,andI.Gurevych.
+2010.Amonolingualtree-basedtranslationmodel
+
+forsentenceIn
+ProceedingsofThe
+23rdInternationalConferenceonComputational
+
+Linguistics,pages1353Œ1361.AssociationforCom-
+
+putationalLinguistics.
+
+
+
